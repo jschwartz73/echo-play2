@@ -5,18 +5,37 @@ import play.mvc.*;
 
 import views.html.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 public class Application extends Controller {
 
     public static Result index() {
-//        throw new RuntimeException("JEFF");
-        return ok(index.render("Your new application is ready."));
+        return redirect(routes.Application.echoGet());
     }
 
     public static Result echoGet() {
-        Logger.info("echoGet: " + System.currentTimeMillis());
-        return ok("Got it");
+
+        String addr = "";
+        String canHost = "";
+        String host = "";
+        InetAddress ip;
+        try {
+            ip = InetAddress.getLocalHost();
+            addr = ip.getHostAddress();
+            canHost = ip.getCanonicalHostName();
+            host = ip.getHostName();
+        } catch (UnknownHostException e) {
+            addr = "Address not found: " + e.getMessage();
+        }
+
+        int port = Configuration.root().getInt("http.port", 9000);
+        long time = System.currentTimeMillis();
+
+        Logger.info("[GET] echo: " + addr + ":" + port + " / time: " + time);
+
+        return ok(echoGet.render(addr, port, time, host, canHost));
     }
 
     public static Result echo() {
