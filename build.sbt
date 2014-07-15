@@ -7,9 +7,8 @@ name := "echo"
 version := "1.0SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  javaJdbc,
-  javaEbean,
-  cache
+  cache,
+  "com.kenshoo" %% "metrics-play" % "0.1.5"
 )
 
 play.Project.playJavaSettings
